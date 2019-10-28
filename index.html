@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<link
+			rel="stylesheet"
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+			integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+			crossorigin="anonymous"
+		/>
+		<title>Document</title>
+		<script
+			src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+			integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+			integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+			integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+			crossorigin="anonymous"
+		></script>
+	</head>
+	<body>
+		<div class="container mt-3">
+			<div class="input-group mb-3">
+				<div class="input-group-prepend">
+					<span class="input-group-text" id="basic-addon1">Funktion</span>
+				</div>
+				<input
+					id="function"
+					type="text"
+					class="form-control"
+					value=""
+					placeholder="x2x1x0 +x3x2x0 +x3¯¯¯¯¯x1 +x2¯¯¯¯¯x1¯¯¯¯¯x0¯¯¯¯¯ +x3¯¯¯¯¯x2¯¯¯¯¯x0¯¯¯¯¯"
+				/>
+			</div>
+
+			<div class="input-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">With textarea</span>
+				</div>
+				<textarea
+					placeholder="a. x3¯¯¯¯¯x2x1¯¯¯¯¯x0¯¯¯¯¯
+b. x3x2¯¯¯¯¯x1x0
+c. x3x2¯¯¯¯¯x1¯¯¯¯¯x0
+d. x3¯¯¯¯¯x2x1x0
+e. x3x2x1¯¯¯¯¯x0
+f. x3x2x1x0
+g. x3x2¯¯¯¯¯x1x0¯¯¯¯¯
+h. x3x2x1¯¯¯¯¯x0¯¯¯¯¯
+i. x3¯¯¯¯¯x2¯¯¯¯¯x1x0
+j. x3¯¯¯¯¯x2¯¯¯¯¯x1¯¯¯¯¯x0
+k. x3¯¯¯¯¯x2¯¯¯¯¯x1x0¯¯¯¯¯
+l. x3¯¯¯¯¯x2¯¯¯¯¯x1¯¯¯¯¯x0¯¯¯¯¯
+m. x3x2¯¯¯¯¯x1¯¯¯¯¯x0¯¯¯¯¯
+n. x3x2x1x0¯¯¯¯¯
+o. x3¯¯¯¯¯x2x1¯¯¯¯¯x0
+p. x3¯¯¯¯¯x2x1x0¯¯¯¯¯"
+					id="list"
+					class="form-control"
+					aria-label="With textarea"
+				></textarea>
+			</div>
+			<table class="table"></table>
+		</div>
+		<script src="boolschefunktion.js"></script>
+		<script>
+			let boolscheFunktion = new BoolscheFunktion(
+				document.querySelector('#function').value
+			);
+
+			const table = document.querySelector('table');
+			document.querySelector('#function').addEventListener('keyup', event => {
+				boolscheFunktion = new BoolscheFunktion(event.target.value);
+			});
+
+			document.querySelector('#list').addEventListener('keyup', event => {
+				const liste = event.target.value.split('\n');
+				const array = liste.map(line =>
+					boolscheFunktion.includes(line.split(' ')[1])
+				);
+
+				table.innerHTML =
+					'<th>Aufgabe</th>' +
+					boolscheFunktion.function
+						.map(
+							header =>
+								`<th>${Object.keys(header)
+									.map(key => `${header[key] ? '' : '¬'}x${key}`)
+									.join('')}</th>`
+						)
+						.join('');
+				const main = array
+					.map(
+						(row, index) =>
+							`<tr><td>${liste[index].split(' ')[0]}</td>${row
+								.map(
+									cell =>
+										`<td style="color: ${
+											cell ? 'white' : 'black'
+										};background-color:${
+											cell ? 'green' : 'white'
+										}">${cell}</td>`
+								)
+								.join('')}</tr>`
+					)
+					.join('');
+				table.innerHTML += main;
+			});
+		</script>
+	</body>
+</html>
